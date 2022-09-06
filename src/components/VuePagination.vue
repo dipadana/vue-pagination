@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed } from "vue";
 
 const props = defineProps<{
   totalPage: number;
@@ -10,7 +10,9 @@ const pageData = computed(() => {
   let result: any = [];
   const current = props.currentPage;
   const total = props.totalPage;
-  if (props.currentPage <= 5) {
+  if (total <= 6) {
+    for (let i = 1; i <= total; i++) result.push(i);
+  } else if (props.currentPage <= 5) {
     result = [1, 2, 3, 4, 5, "...", total];
   } else if (total - 4 <= current && current <= total) {
     result = [1, "...", total - 4, total - 3, total - 2, total - 1, total];
