@@ -6,12 +6,6 @@ const props = defineProps<{
   currentPage: number;
 }>();
 
-// const totalPage = ref(props.totalPage);
-// const currentPage = ref(props.currentPage);
-
-// const totalPage = ref(10);
-// const currentPage = ref(1);
-
 const pageData = computed(() => {
   let result: any = [];
   const current = props.currentPage;
@@ -28,27 +22,27 @@ const pageData = computed(() => {
 </script>
 
 <template>
-  <div>
+  <div class="pagination-wrapper">
     <slot name="prev-button"></slot>
     <span v-for="i in pageData" :key="i">
-      <p>
-        <slot :count="i"></slot>
-      </p>
+      <slot :count="i"></slot>
     </span>
     <slot name="next-button"></slot>
   </div>
 </template>
 
 <style scoped>
-div {
-  display: flex;
+.pagination-wrapper {
   align-items: center;
+  display: flex;
+  gap: 2px;
   justify-content: center;
-  margin-top: 200px;
+  margin-top: 74px;
 }
 
-p {
-  font-size: 50px;
-  margin: 0 40px;
+@media (min-width: 576px) {
+  .pagination-wrapper {
+    gap: 8px;
+  }
 }
 </style>
