@@ -23,7 +23,7 @@ const maxPage = ref(6);
             v-for="i in pagination"
             :key="i"
             :class="currentPage == i ? 'text-bold' : ''"
-            @click="changePage(Number(i))"
+            @click="changePage(i)"
           >
             {{ i }}
           </button>
