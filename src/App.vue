@@ -5,40 +5,30 @@ import Pagination from "./components/VuePagination.vue";
 const currentPage = ref(1);
 const totalPage = ref(15);
 const maxPage = ref(6);
-
-function changePage(param: string | number) {
-  if (param === "+" && currentPage.value < totalPage.value) {
-    currentPage.value++;
-  } else if (param === "-" && currentPage.value > 1) {
-    currentPage.value--;
-  } else if (param !== "..." && param !== "+" && param !== "-") {
-    currentPage.value = Number(param);
-  }
-}
 </script>
 
 <template>
   <div>
     <div class="pagination-wrapper">
       <pagination
-        :current-page="currentPage"
+        v-model="currentPage"
         :total-page="totalPage"
         :max-page="maxPage"
       >
-        <template v-slot:prev-button>
+        <template v-slot:prev-button="{ changePage }">
           <button @click="changePage('-')">{{ "<" }}</button>
         </template>
-        <template #default="{ pagination }">
+        <template #default="{ pagination, changePage }">
           <button
             v-for="i in pagination"
             :key="i"
             :class="currentPage == i ? 'text-bold' : ''"
-            @click="changePage(i)"
+            @click="changePage(Number(i))"
           >
             {{ i }}
           </button>
         </template>
-        <template v-slot:next-button>
+        <template v-slot:next-button="{ changePage }">
           <button @click="changePage('+')">{{ ">" }}</button>
         </template>
       </pagination>

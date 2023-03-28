@@ -2,10 +2,12 @@
 import { computed } from "vue";
 
 const props = defineProps<{
+  modelValue: number;
   totalPage: number;
-  currentPage: number;
   maxPage: number;
 }>();
+
+const emit = defineEmits(["update:modelValue"]);
 
 function paginationLogic(max: number, current: number, total: number) {
   let result: Array<string | number> = [];
@@ -13,7 +15,7 @@ function paginationLogic(max: number, current: number, total: number) {
 
   if (total <= max) {
     for (let i = 1; i <= total; i++) result.push(i);
-  } else if (props.currentPage <= max - 2) {
+  } else if (current <= max - 2) {
     for (let i = 1; i <= max - 2; i++) temp.push(i);
     result = [...temp, "...", total];
   } else if (total - (max - 3) <= current && current <= total) {
@@ -38,12 +40,22 @@ function paginationLogic(max: number, current: number, total: number) {
 }
 
 const pageData = computed(() => {
-  return paginationLogic(props.maxPage, props.currentPage, props.totalPage);
+  return paginationLogic(props.maxPage, props.modelValue, props.totalPage);
 });
+
+function changePage(param: "+" | "-" | "..." | number) {
+  if (param === "+" && props.modelValue < props.totalPage) {
+    emit("update:modelValue", props.modelValue + 1);
+  } else if (param === "-" && props.modelValue > 1) {
+    emit("update:modelValue", props.modelValue - 1);
+  } else if (param !== "..." && param !== "+" && param !== "-") {
+    emit("update:modelValue", Number(param));
+  }
+}
 </script>
 
 <template>
-  <slot name="prev-button"></slot>
-  <slot :pagination="pageData"></slot>
-  <slot name="next-button"></slot>
+  <slot name="prev-button" :change-page="changePage"></slot>
+  <slot :pagination="pageData" :change-page="changePage"></slot>
+  <slot name="next-button" :change-page="changePage"></slot>
 </template>
