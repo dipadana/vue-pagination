@@ -4,31 +4,50 @@ import { computed } from "vue";
 const props = defineProps<{
   totalPage: number;
   currentPage: number;
+  maxPage: number;
 }>();
 
-const pageData = computed(() => {
-  let result: any = [];
-  const current = props.currentPage;
-  const total = props.totalPage;
-  if (total <= 6) {
+function paginationLogic(max: number, current: number, total: number) {
+  let result: Array<string | number> = [];
+  let temp: Array<string | number> = [];
+
+  if (total <= max) {
     for (let i = 1; i <= total; i++) result.push(i);
-  } else if (props.currentPage <= 5) {
-    result = [1, 2, 3, 4, 5, "...", total];
-  } else if (total - 4 <= current && current <= total) {
-    result = [1, "...", total - 4, total - 3, total - 2, total - 1, total];
+  } else if (props.currentPage <= max - 2) {
+    for (let i = 1; i <= max - 2; i++) temp.push(i);
+    result = [...temp, "...", total];
+  } else if (total - (max - 3) <= current && current <= total) {
+    temp = [];
+    for (let i = 0; i <= max - 3; i++) temp.unshift(total - i);
+    result = [1, "...", ...temp];
   } else {
-    result = [1, "...", current - 1, current, current + 1, "...", total];
+    if (max >= 10) {
+      temp = [current];
+      const loop = (max - 4) / 2;
+      for (let i = 1; i <= loop; i++) temp.unshift(current - i);
+      for (let i = 1; i <= loop; i++) temp.push(current + i);
+      result = [1, "...", ...temp, "...", total];
+    } else if (max >= 6 && max <= 9) {
+      result = [1, "...", current - 1, current, current + 1, "...", total];
+    } else {
+      result = [1, "...", current, "...", total];
+    }
   }
+
   return result;
+}
+
+const pageData = computed(() => {
+  return paginationLogic(props.maxPage, props.currentPage, props.totalPage);
 });
 </script>
 
 <template>
   <div class="pagination-wrapper">
     <slot name="prev-button"></slot>
-    <span v-for="i in pageData" :key="i">
+    <template v-for="i in pageData" :key="i">
       <slot :count="i"></slot>
-    </span>
+    </template>
     <slot name="next-button"></slot>
   </div>
 </template>
