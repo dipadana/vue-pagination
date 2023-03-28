@@ -23,17 +23,11 @@ function paginationLogic(max: number, current: number, total: number) {
     for (let i = 0; i <= max - 3; i++) temp.unshift(total - i);
     result = [1, "...", ...temp];
   } else {
-    if (max >= 10) {
-      temp = [current];
-      const loop = (max - 4) / 2;
-      for (let i = 1; i <= loop; i++) temp.unshift(current - i);
-      for (let i = 1; i <= loop; i++) temp.push(current + i);
-      result = [1, "...", ...temp, "...", total];
-    } else if (max >= 6 && max <= 9) {
-      result = [1, "...", current - 1, current, current + 1, "...", total];
-    } else {
-      result = [1, "...", current, "...", total];
-    }
+    temp = [current];
+    const loop = (max - 4) / 2;
+    for (let i = 1; i <= loop; i++) temp.unshift(current - i);
+    for (let i = 1; i <= loop; i++) temp.push(current + i);
+    result = [1, "...", ...temp, "...", total];
   }
 
   return result;
@@ -43,7 +37,7 @@ const pageData = computed(() => {
   return paginationLogic(props.maxPage, props.modelValue, props.totalPage);
 });
 
-function changePage(param: "+" | "-" | "..." | number) {
+function changePage(param: string | number) {
   if (param === "+" && props.modelValue < props.totalPage) {
     emit("update:modelValue", props.modelValue + 1);
   } else if (param === "-" && props.modelValue > 1) {
