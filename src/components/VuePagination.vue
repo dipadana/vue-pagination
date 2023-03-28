@@ -43,27 +43,7 @@ const pageData = computed(() => {
 </script>
 
 <template>
-  <div class="pagination-wrapper">
-    <slot name="prev-button"></slot>
-    <template v-for="i in pageData" :key="i">
-      <slot :count="i"></slot>
-    </template>
-    <slot name="next-button"></slot>
-  </div>
+  <slot name="prev-button"></slot>
+  <slot :pagination="pageData"></slot>
+  <slot name="next-button"></slot>
 </template>
-
-<style scoped>
-.pagination-wrapper {
-  align-items: center;
-  display: flex;
-  gap: 2px;
-  justify-content: center;
-  margin-top: 74px;
-}
-
-@media (min-width: 576px) {
-  .pagination-wrapper {
-    gap: 8px;
-  }
-}
-</style>

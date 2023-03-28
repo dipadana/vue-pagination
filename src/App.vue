@@ -19,26 +19,30 @@ function changePage(param: string | number) {
 
 <template>
   <div>
-    <pagination
-      :total-page="totalPage"
-      :current-page="currentPage"
-      :max-page="maxPage"
-    >
-      <template v-slot:prev-button>
-        <button @click="changePage('-')">{{ "<" }}</button>
-      </template>
-      <template #default="{ count }">
-        <button
-          @click="changePage(count)"
-          :class="currentPage == count ? 'text-bold' : ''"
-        >
-          {{ count }}
-        </button>
-      </template>
-      <template v-slot:next-button>
-        <button @click="changePage('+')">{{ ">" }}</button>
-      </template>
-    </pagination>
+    <div class="pagination-wrapper">
+      <pagination
+        :current-page="currentPage"
+        :total-page="totalPage"
+        :max-page="maxPage"
+      >
+        <template v-slot:prev-button>
+          <button @click="changePage('-')">{{ "<" }}</button>
+        </template>
+        <template #default="{ pagination }">
+          <button
+            v-for="i in pagination"
+            :key="i"
+            :class="currentPage == i ? 'text-bold' : ''"
+            @click="changePage(i)"
+          >
+            {{ i }}
+          </button>
+        </template>
+        <template v-slot:next-button>
+          <button @click="changePage('+')">{{ ">" }}</button>
+        </template>
+      </pagination>
+    </div>
   </div>
 </template>
 
@@ -51,5 +55,19 @@ button {
   background-color: white;
   border: none;
   cursor: pointer;
+}
+
+.pagination-wrapper {
+  align-items: center;
+  display: flex;
+  gap: 2px;
+  justify-content: center;
+  margin-top: 74px;
+}
+
+@media (min-width: 576px) {
+  .pagination-wrapper {
+    gap: 8px;
+  }
 }
 </style>
